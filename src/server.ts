@@ -9,9 +9,15 @@ async function main() {
   await startAgenda();
 
   const app = createApp();
-  app.listen(env.PORT, () => {
-    logger.info({ port: env.PORT }, "API server listening");
-  });
+  if (env.NODE_ENV === "production") {
+    app.listen(env.PORT, "0.0.0.0", () => {
+      logger.info({ port: env.PORT, host: "0.0.0.0" }, "API server listening");
+    });
+  } else {
+    app.listen(env.PORT, () => {
+      logger.info({ port: env.PORT }, "API server listening");
+    });
+  }
 }
 
 main().catch((err) => {
